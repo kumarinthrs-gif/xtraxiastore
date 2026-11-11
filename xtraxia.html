@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LOADER XTRAXIA</title>
+<link rel="icon" href="assets/x-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --card:#f8fbff; --text:#0f172a; --sub:#475569; --link:#c2410c;
+  --bg1:#fbbf24; --bg2:#f97316; --bg3:#ea580c;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root{--card:#1e293b; --text:#f1f5f9; --sub:#94a3b8; --link:#fdba74; --bg1:#b45309; --bg2:#c2410c; --bg3:#7c2d12; color-scheme:dark;}
+}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;font-family:"Noto Sans Thai",system-ui,sans-serif;
+  background:linear-gradient(135deg,var(--bg1),var(--bg2) 55%,var(--bg3));background-attachment:fixed;color:var(--text)}
+#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+header,main{position:relative;z-index:1}
+header{text-align:center;padding:56px 16px 24px;color:#fff}
+h1{margin:0;font-size:clamp(40px,9vw,84px);font-weight:800;letter-spacing:-1px;text-shadow:0 4px 24px rgba(0,0,0,.15)}
+.sub{margin:10px 0 0;font-size:clamp(16px,3vw,22px);opacity:.92}
+.search{margin:24px auto 0;max-width:460px}
+.search input{width:100%;padding:14px 20px;border:0;border-radius:999px;font:inherit;font-size:16px;background:var(--card);color:var(--text);box-shadow:0 8px 24px rgba(0,0,0,.15);outline:none}
+main{max-width:1160px;margin:0 auto;padding:16px 16px 64px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:22px}
+.card{background:var(--card);border-radius:16px;padding:22px;display:flex;flex-direction:column;box-shadow:0 8px 28px rgba(0,0,0,.12);transition:transform .2s,box-shadow .2s}
+.card:hover{transform:translateY(-4px);box-shadow:0 14px 34px rgba(0,0,0,.18)}
+.ico{width:58px;height:58px;border-radius:14px;display:grid;place-items:center;margin-bottom:14px}
+.ico svg{width:28px;height:28px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ico.logo{background:#fff!important;padding:5px}
+.ico img{width:100%;height:100%;object-fit:contain;display:block}
+.card h3{margin:0 0 6px;font-size:20px;font-weight:700}
+.card p{margin:0 0 16px;font-size:14px;color:var(--sub);line-height:1.5;flex:1}
+.meta{font-size:12px;color:var(--sub);margin-bottom:10px}
+.btn{align-self:flex-start;display:inline-flex;gap:8px;align-items:center;color:var(--link);font-weight:700;font-size:15px;text-decoration:none}
+.btn:hover{text-decoration:underline}
+.msg{display:none;text-align:center;color:#fff;padding:32px 0;font-size:18px;font-weight:500}
+.msg img{display:block;margin:0 auto 12px;width:200px;max-width:60vw;height:auto;border-radius:50%;background:#fff;box-shadow:0 8px 28px rgba(0,0,0,.18)}
+.cats{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;max-width:920px;margin:18px auto 0}
+.chip{border:1px solid rgba(255,255,255,.55);background:rgba(255,255,255,.16);color:#fff;border-radius:999px;padding:8px 16px;font:inherit;font-size:14px;font-weight:600;cursor:pointer}
+.chip:hover{background:rgba(255,255,255,.28)}
+.chip.on{background:#fff;color:#c2410c;border-color:#fff}
+.chip small{opacity:.75;margin-left:4px;font-weight:500}
+.tag{align-self:flex-start;display:inline-block;font-size:11px;font-weight:700;color:var(--link);border:1px solid currentColor;border-radius:999px;padding:1px 10px;margin-bottom:8px}
+.fab{position:fixed;left:16px;z-index:20;display:inline-flex;align-items:center;gap:10px;text-decoration:none;font-weight:700;font-size:15px;padding:14px 22px;border-radius:999px;box-shadow:0 8px 24px rgba(0,0,0,.3);transition:transform .15s,background .15s}
+.fab:hover{transform:translateY(-2px)}
+.fab svg{width:20px;height:20px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+#discord{bottom:calc(16px + env(safe-area-inset-bottom,0px));background:#5865F2;color:#fff}
+#discord:hover{background:#4752c4}
+#discord svg{stroke:#fff}
+#site{bottom:calc(76px + env(safe-area-inset-bottom,0px));background:#fff;color:#c2410c}
+#site:hover{background:#fff7ed}
+#site svg{stroke:#c2410c}
+</style>
+</head>
+<body>
+<canvas id="fx" aria-hidden="true"></canvas>
+<header>
+  <h1>LOADER XTRAXIA</h1>
+  <p class="sub">ศูนย์รวมลิงก์โหลดโปรแกรมที่ใช้บ่อย</p>
+  <div class="search"><input id="q" type="search" placeholder="ค้นหาโปรแกรม…" autocomplete="off"></div>
+  <div class="cats" id="cats"></div>
+</header>
+<main>
+  <div class="grid" id="grid"></div>
+  <div class="msg" id="empty"><img src="assets/empty.gif" alt="" width="200" height="200"><div id="emptyTxt">ไม่พบโปรแกรมที่ค้นหา</div></div>
+</main>
+<a class="fab" id="site" href="https://xtraxiastore.com/" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/></svg>เข้าสู่ Website</a>
+<a class="fab" id="discord" href="https://discord.gg/295ZTuBKEd" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 01-11.6 7.1L4 20l1-4.6A8 8 0 1121 12z"/></svg>เข้า Discord</a>
+
+<script>
+/* ============================================================
+   รายการโปรแกรม: แก้ไข/เพิ่ม/ลบที่ไฟล์นี้ แล้วอัปโหลดขึ้น Vercel ใหม่
+   name  = ชื่อ        desc = คำอธิบาย      meta = ข้อมูลเพิ่มเติม
+   url   = ลิงก์ดาวน์โหลด
+   icon  = dl | gear | globe | box | play | screen | file | chat | shield | game
+   cat   = หมวดหมู่: pc | valorant | freefire | pubg | roblox
+   ci    = เลขสีไอคอน 0-8
+   logo  = path รูปโลโก้ เช่น "logos/valorant.webp" (ไม่ใส่ก็ได้ ""  จะใช้ไอคอนสีแทน)
+   ============================================================ */
+var APPS = [
+  {"name": "DirectX End-User Runtime", "desc": "แก้ปัญหาเกมหรือโปรแกรมที่ต้องการ DirectX", "meta": "Microsoft · Windows", "url": "https://www.microsoft.com/en-us/download/details.aspx?id=35", "icon": "dl", "ci": 0, "cat": "pc", "logo": ""},
+  {"name": "Visual C++ Redistributable", "desc": "แก้ปัญหา DLL หายไป ติดตั้งครบทุกเวอร์ชันที่จำเป็น", "meta": "Microsoft · Windows", "url": "https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist", "icon": "gear", "ci": 1, "cat": "pc", "logo": ""},
+  {"name": "7-Zip", "desc": "โปรแกรมบีบอัดและแตกไฟล์ฟรี รองรับ ZIP, RAR, 7z", "meta": "Igor Pavlov · Windows", "url": "https://www.7-zip.org/", "icon": "box", "ci": 3, "cat": "pc", "logo": ""},
+  {"name": "AnyDesk", "desc": "ควบคุมคอมพิวเตอร์ระยะไกล ขอความช่วยเหลือผ่านอินเทอร์เน็ต", "meta": "AnyDesk · ทุกแพลตฟอร์ม", "url": "https://anydesk.com/en/downloads", "icon": "screen", "ci": 5, "cat": "pc", "logo": ""},
+  {"name": "Discord", "desc": "แชทเสียงและข้อความสำหรับเกมเมอร์และชุมชน", "meta": "Discord · ทุกแพลตฟอร์ม", "url": "https://discord.com/download", "icon": "chat", "ci": 7, "cat": "pc", "logo": ""},
+  {"name": "Steam", "desc": "แพลตฟอร์มซื้อและเล่นเกมบนคอมพิวเตอร์", "meta": "Valve · Windows / Mac / Linux", "url": "https://store.steampowered.com/about/", "icon": "game", "ci": 0, "cat": "pc", "logo": ""},
+  {"name": "AIMCOLOR VALORANT", "desc": "โปรแกรมล็อคสี Valorant", "meta": "รองรับ · Win10/11", "url": "https://gofile.io/d/cYmdLwFT", "icon": "dl", "ci": 4, "cat": "valorant", "logo": ""},
+  {"name": "Internal Valorant", "desc": "วิธีใช้และลิ้งค์ดาวน์โหลดอยู่ในไฟล์", "meta": "รองรับ · Win10/11", "url": "https://pub-f76bfee4682d40bebce65d48f3e96bd5.r2.dev/Valorant/Valorant%20InternalX.rar", "icon": "dl", "ci": 2, "cat": "valorant", "logo": ""},
+  {"name": "PUBG THAI (standard)", "desc": "วิธีใช้และลิ้งค์ดาวน์โหลดอยู่ในไฟล์", "meta": "รองรับ · Win10/11 Pass : 1", "url": "https://pub-f76bfee4682d40bebce65d48f3e96bd5.r2.dev/STEAM/PUBG%20STANDARD.rar", "icon": "dl", "ci": 4, "cat": "pubg", "logo": ""},
+  {"name": "Matcha Roblox External", "desc": "วิธีใช้และลิ้งค์ดาวน์โหลดอยู่ในไฟล์", "meta": "รองรับ · Win10/11 Pass : 1", "url": "https://drive.google.com/file/d/1XLdRU4RjsueSfWYfx3HC1Gc7q18xK_4y/view?usp=sharing", "icon": "dl", "ci": 2, "cat": "roblox", "logo": ""},
+  {"name": "VALORANT EXTERNAL", "desc": "วิธีใช้และลิ้งค์ดาวน์โหลดอยู่ในไฟล์", "meta": "รองรับ · Win10/11 Pass : 1", "url": "https://drive.google.com/file/d/1tNlQ9EEmB3rWAVvKbfxh-zqlVVMsbEam/view?usp=sharing", "icon": "dl", "ci": 4, "cat": "valorant", "logo": ""},
+  {"name": "Spoofer Valorant", "desc": "วิธีใช้และลิ้งค์ดาวน์โหลดอยู่ในไฟล์", "meta": "รองรับ · Win10 Pass : 1", "url": "https://drive.google.com/file/d/1aB9HGw4HyKYMwBJDOrD4dLGHYQ63vAYS/view?usp=sharing", "icon": "dl", "ci": 2, "cat": "valorant", "logo": ""},
+  {"name": "Spoofer No-ReWin", "desc": "วิธีใช้และลิ้งค์ดาวน์โหลดอยู่ในไฟล์", "meta": "รองรับ · Win10 Pass : 1", "url": "https://drive.google.com/file/d/1n8n0lqE8azq5uGjLnIfHAgyoqcufkShm/view?usp=sharing", "icon": "dl", "ci": 4, "cat": "valorant", "logo": ""},
+  {"name": "Spoofer Eac Be PUBG", "desc": "วิธีใช้และลิ้งค์ดาวน์โหลดอยู่ในไฟล์", "meta": "รองรับ · Win10/11 Pass : 1", "url": "https://drive.google.com/file/d/11chS6GCtsx5msaLh473eNZhSaVKNtHuH/view?usp=sharing", "icon": "dl", "ci": 2, "cat": "pubg", "logo": ""}
+];
+
+var COLORS = [["#3b82f6","#2563eb"],["#06b6d4","#0891b2"],["#ef4444","#f97316"],["#6366f1","#4f46e5"],["#f59e0b","#ea580c"],["#14b8a6","#0d9488"],["#22c55e","#16a34a"],["#8b5cf6","#7c3aed"],["#ec4899","#db2777"]];
+var ICONS = {
+  dl:'<path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/>',
+  gear:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/>',
+  globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/>',
+  box:'<path d="M21 8l-9-5-9 5v8l9 5 9-5V8zM3 8l9 5 9-5M12 13v8"/>',
+  play:'<circle cx="12" cy="12" r="9"/><path d="M10 8l6 4-6 4V8z"/>',
+  screen:'<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/>',
+  file:'<path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8l-5-5zM14 3v5h5M9 13h6M9 17h6"/>',
+  chat:'<path d="M21 12a8 8 0 01-11.6 7.1L4 20l1-4.6A8 8 0 1121 12z"/>',
+  shield:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"/>',
+  game:'<rect x="2" y="7" width="20" height="11" rx="4"/><path d="M7 10v5M4.5 12.5h5M16 11h.01M18.5 14h.01"/>'
+};
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+function safeUrl(u){try{var x=new URL(u);return (x.protocol==="https:"||x.protocol==="http:")?x.href:"";}catch(e){return "";}}
+function safeLogo(p){return (typeof p==="string" && /^[\w\-\/.]+$/.test(p) && p.indexOf("..")===-1) ? p : "";}
+
+var CATS=[["pc","โปรแกรม PC"],["valorant","โปรแกรม VALORANT"],["freefire","โปรแกรม FREEFIRE"],["pubg","โปรแกรม PUBG"],["roblox","โปรแกรม Roblox"]];
+var curCat="all";
+function catOf(a){return (a&&a.cat&&CATS.some(function(c){return c[0]===a.cat;}))?a.cat:"pc";}
+function catName(k){var c=CATS.filter(function(x){return x[0]===k;})[0];return c?c[1]:CATS[0][1];}
+function renderChips(){
+  var all=[["all","ทั้งหมด"]].concat(CATS);
+  document.getElementById("cats").innerHTML=all.map(function(c){
+    var n=c[0]==="all"?APPS.length:APPS.filter(function(a){return catOf(a)===c[0];}).length;
+    return '<button type="button" class="chip'+(c[0]===curCat?' on':'')+'" data-cat="'+c[0]+'">'+c[1]+'<small>'+n+'</small></button>';
+  }).join("");
+}
+document.getElementById("cats").addEventListener("click",function(e){
+  var b=e.target.closest("button[data-cat]"); if(!b) return;
+  curCat=b.getAttribute("data-cat"); render();
+});
+function render(){
+  renderChips();
+  var t=document.getElementById("q").value.trim().toLowerCase();
+  var list=APPS.filter(function(a){if(curCat!=="all"&&catOf(a)!==curCat)return false;return (a.name+" "+(a.desc||"")+" "+(a.meta||"")).toLowerCase().indexOf(t)!==-1;});
+  document.getElementById("grid").innerHTML=list.map(function(a){
+    var c=COLORS[a.ci]||COLORS[0], ic=ICONS[a.icon]||ICONS.dl, logo=safeLogo(a.logo), href=safeUrl(a.url);
+    return '<article class="card"><div class="ico'+(logo?' logo':'')+'" style="background:linear-gradient(135deg,'+c[0]+','+c[1]+')">'+
+      (logo?'<img src="'+esc(logo)+'" alt="">':'<svg viewBox="0 0 24 24">'+ic+'</svg>')+'</div>'+
+      '<div class="tag">'+esc(catName(catOf(a)))+'</div><h3>'+esc(a.name)+'</h3><p>'+esc(a.desc)+'</p>'+(a.meta?'<div class="meta">'+esc(a.meta)+'</div>':'')+
+      (href?'<a class="btn" href="'+esc(href)+'" target="_blank" rel="noopener noreferrer">ดาวน์โหลด <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>':'')+
+      '</article>';
+  }).join("");
+  document.getElementById("empty").style.display=list.length?"none":"block";
+  document.getElementById("emptyTxt").textContent=(curCat!=="all"&&!t)?"ยังไม่มีโปรแกรมในหมวดนี้":"ไม่พบโปรแกรมที่ค้นหา";
+}
+document.getElementById("q").addEventListener("input",render);
+render();
+
+/* อนุภาคโลโก้ลอยในพื้นหลัง */
+(function(){
+  var cv=document.getElementById("fx"); if(!cv||!cv.getContext) return;
+  var ctx=cv.getContext("2d"), img=new Image(), W=0,H=0,dpr=1,ps=[];
+  var still=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function rnd(a,b){return a+Math.random()*(b-a);}
+  function make(init){var s=rnd(18,64);return {x:rnd(0,W),y:init?rnd(0,H):H+s,s:s,vy:rnd(.25,.8)*(s/40+.4),ph:rnd(0,6.28),sw:rnd(.2,.9),r:rnd(0,6.28),vr:rnd(-.008,.008),a:rnd(.10,.34)};}
+  function resize(){dpr=Math.min(window.devicePixelRatio||1,2);W=innerWidth;H=innerHeight;cv.width=W*dpr;cv.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);var n=W<700?14:26;ps=[];for(var i=0;i<n;i++)ps.push(make(true));}
+  function frame(t){ctx.clearRect(0,0,W,H);for(var i=0;i<ps.length;i++){var p=ps[i];
+    if(!still){p.y-=p.vy;p.r+=p.vr;p.x+=Math.sin(t/1200+p.ph)*p.sw*.4;if(p.y<-p.s){ps[i]=p=make(false);}}
+    ctx.save();ctx.globalAlpha=p.a;ctx.translate(p.x,p.y);ctx.rotate(p.r);ctx.drawImage(img,-p.s/2,-p.s/2,p.s,p.s);ctx.restore();}
+    if(!still)requestAnimationFrame(frame);}
+  img.onload=function(){resize();addEventListener("resize",resize);requestAnimationFrame(frame);};
+  img.src="assets/x-logo.png";
+})();
+</script>
+</body>
+</html>
